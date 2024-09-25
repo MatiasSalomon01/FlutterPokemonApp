@@ -6,7 +6,7 @@ sealed class PokemonBlocState {}
 final class PokemonBlocLoading extends PokemonBlocState {}
 
 final class PokemonBlocData extends PokemonBlocState {
-  final List<Pokemon> pokemons;
+  final List<PokemonPreview> pokemons;
 
   PokemonBlocData({required this.pokemons});
 }

@@ -8,7 +8,7 @@ part 'pokemon_bloc_state.dart';
 
 class PokemonBlocBloc extends Bloc<PokemonBlocEvent, PokemonBlocState> {
   final PokemonService service;
-  List<Pokemon> pokemons = [];
+  List<PokemonPreview> pokemons = [];
 
   String? next;
   PokemonBlocBloc(this.service) : super(PokemonBlocLoading()) {

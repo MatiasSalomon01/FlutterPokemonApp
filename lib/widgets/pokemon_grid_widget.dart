@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
-import 'package:flutter_pokemon_app/constants/pokemon_types.dart';
+import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/models.dart';
 
 class PokemonGrid extends StatefulWidget {
   const PokemonGrid({super.key, required this.pokemons});
-  final List<Pokemon> pokemons;
+  final List<PokemonPreview> pokemons;
 
   @override
   State<PokemonGrid> createState() => _PokemonGridState();
@@ -16,7 +18,7 @@ class PokemonGrid extends StatefulWidget {
 
 class _PokemonGridState extends State<PokemonGrid> {
   late final ScrollController scrollController;
-
+  late final FocusNode node;
   @override
   void initState() {
     super.initState();
@@ -29,10 +31,13 @@ class _PokemonGridState extends State<PokemonGrid> {
           }
         },
       );
+
+    node = FocusNode()..requestFocus();
   }
 
   @override
   void dispose() {
+    node.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -40,22 +45,76 @@ class _PokemonGridState extends State<PokemonGrid> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) => GridView.builder(
-        controller: scrollController,
-        padding: const EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: getCrossAxisCount(constraints.maxWidth),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          if (index < widget.pokemons.length) {
-            return _PokemonCard(pokemon: widget.pokemons[index]);
-          } else {
-            return const Center(child: CircularProgressIndicator());
+      builder: (context, constraints) => KeyboardListener(
+        focusNode: node,
+        autofocus: true,
+        onKeyEvent: (value) {
+          if (value is KeyDownEvent) {
+            if (value.logicalKey.keyLabel == 'Home') {
+              scrollController.jumpTo(0);
+            }
+
+            if (value.logicalKey.keyLabel == 'End') {
+              scrollController
+                  .jumpTo(scrollController.position.maxScrollExtent);
+            }
+
+            if (value.logicalKey.keyLabel == 'Page Up') {
+              double newScrollPosition =
+                  (scrollController.position.pixels - 840)
+                      .clamp(0.0, scrollController.position.maxScrollExtent);
+              scrollController.animateTo(
+                newScrollPosition,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.linear,
+              );
+            }
+
+            if (value.logicalKey.keyLabel == 'Page Down') {
+              double newScrollPosition =
+                  (scrollController.position.pixels + 840)
+                      .clamp(0.0, scrollController.position.maxScrollExtent);
+              scrollController.animateTo(
+                newScrollPosition,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.linear,
+              );
+            }
           }
         },
-        itemCount: widget.pokemons.length,
+        child: GridView.builder(
+          controller: scrollController,
+          padding: const EdgeInsets.all(10),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: getCrossAxisCount(constraints.maxWidth),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          // itemCount: widget.pokemons.length + 1,
+          itemCount: widget.pokemons.length,
+          itemBuilder: (context, index) {
+            return _PokemonCard(pokemon: widget.pokemons[index]);
+            // if (index < widget.pokemons.length) {
+            // } else {
+            //   return CircularProgressIndicator();
+            // }
+          },
+        ),
+      ),
+    );
+  }
+
+  List<Shimmer> getMore() {
+    return List.generate(
+      10,
+      (index) => Shimmer.fromColors(
+        baseColor: Colors.black12,
+        highlightColor: Colors.white,
+        child: Column(
+          children: [
+            Expanded(child: Container(color: Colors.black12)),
+          ],
+        ),
       ),
     );
   }
@@ -64,18 +123,26 @@ class _PokemonGridState extends State<PokemonGrid> {
 class _PokemonCard extends StatelessWidget {
   const _PokemonCard({super.key, required this.pokemon});
 
-  final Pokemon pokemon;
+  final PokemonPreview pokemon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: pokemon.primaryColor.withOpacity(.3),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        gradient: LinearGradient(
+          colors: [Colors.grey.shade300, Colors.grey.shade100],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        // color: Colors.grey.shade300
+      ),
       padding: const EdgeInsets.all(10),
       child: Stack(
         children: [
           Positioned(
             top: 0,
-            right: 0,
+            left: 0,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
@@ -90,7 +157,17 @@ class _PokemonCard extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 1.3,
-                child: SvgPicture.network(pokemon.photo),
+                child: pokemon.isSvg
+                    ? SvgPicture.network(
+                        pokemon.photo,
+                        placeholderBuilder: (context) => Shimmer.fromColors(
+                          baseColor: Colors.black,
+                          highlightColor: Colors.white,
+                          child:
+                              const Center(child: Text('Cargando imagen...')),
+                        ),
+                      )
+                    : Image.network(pokemon.photo),
               ),
               Text(
                 pokemon.name.toUpperCase(),

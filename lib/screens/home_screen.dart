@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
           PokemonBlocBloc(PokemonService())..add(PokemonBlocGetList()),
       lazy: false,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: BlocBuilder<PokemonBlocBloc, PokemonBlocState>(
           builder: (context, state) {
             if (state is PokemonBlocLoading) {

@@ -31,3 +31,32 @@ int getCrossAxisCount(double width) {
   if (width > 600) return 3;
   return 2;
 }
+
+const String defaultImage =
+    'https://res.cloudinary.com/dowuc5zob/image/upload/v1727298023/pokeball_thncrj.png';
+
+var pokemonWithoutPhoto = [
+  10061,
+  10080,
+  10081,
+  10082,
+  10083,
+  10084,
+  10085,
+  10144,
+  10151,
+  10158,
+  10159,
+  10182,
+  10183,
+  10187,
+  10192,
+  10264,
+  10265,
+  10266,
+  10267,
+  10268,
+  10269,
+  10270,
+  10271
+];

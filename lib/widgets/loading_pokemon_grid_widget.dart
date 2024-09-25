@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pokemon_app/constants/pokemon_types.dart';
+import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingPokemonGrid extends StatelessWidget {
