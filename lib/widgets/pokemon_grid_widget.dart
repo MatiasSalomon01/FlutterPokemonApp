@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
 import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../models/models.dart';
 
 class PokemonGrid extends StatefulWidget {
@@ -90,14 +90,9 @@ class _PokemonGridState extends State<PokemonGrid> {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          // itemCount: widget.pokemons.length + 1,
           itemCount: widget.pokemons.length,
           itemBuilder: (context, index) {
             return _PokemonCard(pokemon: widget.pokemons[index]);
-            // if (index < widget.pokemons.length) {
-            // } else {
-            //   return CircularProgressIndicator();
-            // }
           },
         ),
       ),
@@ -158,16 +153,18 @@ class _PokemonCard extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1.3,
                 child: pokemon.isSvg
-                    ? SvgPicture.network(
-                        pokemon.photo,
-                        placeholderBuilder: (context) => Shimmer.fromColors(
-                          baseColor: Colors.black,
-                          highlightColor: Colors.white,
-                          child:
-                              const Center(child: Text('Cargando imagen...')),
+                    ? FlipInX(
+                        child: SvgPicture.network(
+                          pokemon.photo,
+                          placeholderBuilder: (context) => Shimmer.fromColors(
+                            baseColor: Colors.black,
+                            highlightColor: Colors.white,
+                            child:
+                                const Center(child: Text('Cargando imagen...')),
+                          ),
                         ),
                       )
-                    : Image.network(pokemon.photo),
+                    : FlipInX(child: Image.network(pokemon.photo)),
               ),
               Text(
                 pokemon.name.toUpperCase(),
