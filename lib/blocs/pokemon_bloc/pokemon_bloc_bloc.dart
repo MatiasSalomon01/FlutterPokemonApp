@@ -11,12 +11,18 @@ class PokemonBlocBloc extends Bloc<PokemonBlocEvent, PokemonBlocState> {
   List<PokemonPreview> pokemons = [];
 
   String? next;
+  bool fetchMore = true;
+
   PokemonBlocBloc(this.service) : super(PokemonBlocLoading()) {
     on<PokemonBlocGetList>((event, emit) async {
-      var data = await service.getList(next);
-      next = data.$1;
-      pokemons.addAll(data.$2);
-      emit(PokemonBlocData(pokemons: pokemons));
+      if (fetchMore) {
+        var data = await service.getList(next);
+        next = data.$1;
+        pokemons.addAll(data.$2);
+        emit(PokemonBlocData(pokemons: pokemons));
+      }
+
+      if (next == null) fetchMore = false;
     });
   }
 }
