@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
+import 'package:flutter_pokemon_app/blocs/theme_bloc/theme_bloc.dart';
 import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
@@ -125,8 +126,9 @@ class _PokemonCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
+        border: setBorder(context),
         gradient: LinearGradient(
-          colors: [Colors.grey.shade300, Colors.grey.shade100],
+          colors: setLinearGradient(context),
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -179,5 +181,21 @@ class _PokemonCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Color> setLinearGradient(BuildContext context) {
+    if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
+      return [Colors.grey.shade300, Colors.grey.shade100];
+    } else {
+      return [Colors.black12, Colors.white10];
+    }
+  }
+
+  Border setBorder(BuildContext context) {
+    if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
+      return Border.all(color: Colors.black, width: .5);
+    } else {
+      return Border.all(color: Colors.grey, width: .5);
+    }
   }
 }
