@@ -10,3 +10,9 @@ final class PokemonBlocData extends PokemonBlocState {
 
   PokemonBlocData({required this.pokemons});
 }
+
+final class PokemonBlocSearchResult extends PokemonBlocState {
+  final List<PokemonSearchResult> results;
+
+  PokemonBlocSearchResult({required this.results});
+}

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/theme_bloc/theme_bloc.dart';
+import 'package:flutter_pokemon_app/models/models.dart';
 import 'package:flutter_pokemon_app/services/pokemon_service.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../widgets/widgets.dart';
 
@@ -17,6 +19,7 @@ class HomeScreen extends StatelessWidget {
       lazy: false,
       child: Scaffold(
         appBar: AppBar(
+          title: const SearchTextField(),
           actions: const [
             ThemeButtons(),
             SizedBox(width: 10),
@@ -36,6 +39,28 @@ class HomeScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class SearchTextField extends StatelessWidget {
+  const SearchTextField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var bloc = context.read<PokemonBlocBloc>();
+
+    return TypeAheadField<PokemonSearchResult>(
+      emptyBuilder: (_) => const SizedBox(),
+      errorBuilder: (_, __) => const SizedBox(),
+      itemBuilder: (_, __) => const SizedBox(),
+      onSelected: (_) {},
+      suggestionsCallback: (search) {
+        bloc.add(PokemonBlocSearchPokemon(q: search));
+        return [];
+      },
     );
   }
 }

@@ -123,62 +123,65 @@ class _PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        border: setBorder(context),
-        gradient: LinearGradient(
-          colors: setLinearGradient(context),
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          border: setBorder(context),
+          gradient: LinearGradient(
+            colors: setLinearGradient(context),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          // color: Colors.grey.shade300
         ),
-        // color: Colors.grey.shade300
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '#${pokemon.id}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '#${pokemon.id}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
+                ),
               ),
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              AspectRatio(
-                aspectRatio: 1.3,
-                child: pokemon.isSvg
-                    ? FadeIn(
-                        duration: const Duration(milliseconds: 800),
-                        child: SvgPicture.network(
-                          pokemon.photo,
-                          placeholderBuilder: (context) => Shimmer.fromColors(
-                            baseColor: Colors.black,
-                            highlightColor: Colors.white,
-                            child:
-                                const Center(child: Text('Cargando imagen...')),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.3,
+                  child: pokemon.isSvg
+                      ? FadeIn(
+                          duration: const Duration(milliseconds: 800),
+                          child: SvgPicture.network(
+                            pokemon.photo,
+                            placeholderBuilder: (context) => Shimmer.fromColors(
+                              baseColor: Colors.black,
+                              highlightColor: Colors.white,
+                              child: const Center(
+                                  child: Text('Cargando imagen...')),
+                            ),
                           ),
-                        ),
-                      )
-                    : FadeIn(
-                        duration: const Duration(milliseconds: 800),
-                        child: Image.network(pokemon.photo)),
-              ),
-              Text(
-                pokemon.name.toUpperCase(),
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ],
+                        )
+                      : FadeIn(
+                          duration: const Duration(milliseconds: 800),
+                          child: Image.network(pokemon.photo)),
+                ),
+                Text(
+                  pokemon.name.toUpperCase(),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

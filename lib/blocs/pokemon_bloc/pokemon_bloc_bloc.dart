@@ -24,5 +24,16 @@ class PokemonBlocBloc extends Bloc<PokemonBlocEvent, PokemonBlocState> {
 
       if (next == null) fetchMore = false;
     });
+
+    on<PokemonBlocSearchPokemon>((event, emit) async {
+      if (event.q.isNotEmpty) {
+        var results = pokemons
+            .where((element) => element.name.contains(event.q))
+            .toList();
+        emit(PokemonBlocData(pokemons: results));
+      } else {
+        emit(PokemonBlocData(pokemons: pokemons));
+      }
+    });
   }
 }
