@@ -19,19 +19,19 @@ class PokemonGrid extends StatefulWidget {
 class _PokemonGridState extends State<PokemonGrid> {
   late final ScrollController scrollController;
   late final FocusNode node;
+
   @override
   void initState() {
     super.initState();
     scrollController = ScrollController()
       ..addListener(
         () {
-          if (scrollController.position.pixels ==
-              scrollController.position.maxScrollExtent) {
+          if (scrollController.position.pixels >=
+              scrollController.position.maxScrollExtent - 100) {
             context.read<PokemonBlocBloc>().add(PokemonBlocGetList());
           }
         },
       );
-
     node = FocusNode()..requestFocus();
   }
 
@@ -153,7 +153,8 @@ class _PokemonCard extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1.3,
                 child: pokemon.isSvg
-                    ? FlipInX(
+                    ? FadeIn(
+                        duration: const Duration(milliseconds: 800),
                         child: SvgPicture.network(
                           pokemon.photo,
                           placeholderBuilder: (context) => Shimmer.fromColors(
@@ -164,7 +165,9 @@ class _PokemonCard extends StatelessWidget {
                           ),
                         ),
                       )
-                    : FlipInX(child: Image.network(pokemon.photo)),
+                    : FadeIn(
+                        duration: const Duration(milliseconds: 800),
+                        child: Image.network(pokemon.photo)),
               ),
               Text(
                 pokemon.name.toUpperCase(),
