@@ -33,7 +33,7 @@ int getCrossAxisCount(double width) {
 }
 
 const String defaultImage =
-    'https://res.cloudinary.com/dowuc5zob/image/upload/v1727298023/pokeball_thncrj.png';
+    'https://res.cloudinary.com/dowuc5zob/image/upload/v1727883759/pokebola_ziwqt6.png';
 
 var pokemonWithoutPhoto = [
   10061,

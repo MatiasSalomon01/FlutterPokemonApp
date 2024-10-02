@@ -6,6 +6,7 @@ import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/theme_bloc/theme_bloc.dart';
 import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/models.dart';
 
@@ -136,18 +137,26 @@ class _PokemonCard extends StatelessWidget {
           ),
           // color: Colors.grey.shade300
         ),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Stack(
           children: [
             Positioned(
               top: 0,
               left: 0,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(10),
+                  color: setColor(context),
+                ),
                 child: Text(
-                  '#${pokemon.id}',
+                  pokemon.id,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      fontFamily: 'PokemonSolid',
+                      letterSpacing: 5),
                 ),
               ),
             ),
@@ -155,7 +164,7 @@ class _PokemonCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 AspectRatio(
-                  aspectRatio: 1.3,
+                  aspectRatio: 1.4,
                   child: pokemon.isSvg
                       ? FadeIn(
                           duration: const Duration(milliseconds: 800),
@@ -176,8 +185,11 @@ class _PokemonCard extends StatelessWidget {
                 FittedBox(
                   child: Text(
                     pokemon.name.toUpperCase(),
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.bebasNeue(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
                   ),
                 )
               ],
@@ -193,6 +205,14 @@ class _PokemonCard extends StatelessWidget {
       return [Colors.grey.shade300, Colors.grey.shade100];
     } else {
       return [Colors.black, Colors.grey.shade900];
+    }
+  }
+
+  Color setColor(BuildContext context) {
+    if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
+      return Colors.grey.shade100;
+    } else {
+      return Colors.grey.shade900;
     }
   }
 

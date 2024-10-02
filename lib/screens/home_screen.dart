@@ -19,7 +19,21 @@ class HomeScreen extends StatelessWidget {
       lazy: false,
       child: Scaffold(
         appBar: AppBar(
-          title: const SearchTextField(),
+          title: LayoutBuilder(
+            builder: (context, constraints) => Row(
+              children: [
+                if (constraints.maxWidth > 400) ...[
+                  Image.network(
+                    'https://res.cloudinary.com/dowuc5zob/image/upload/v1727881049/Pok%C3%A9dex_logo_nrtwbu.png',
+                    height: 55,
+                  ),
+                  const SizedBox(width: 10),
+                ],
+                const Expanded(flex: 2, child: SearchTextField()),
+                // Spacer()
+              ],
+            ),
+          ),
           actions: const [
             ThemeButtons(),
             SizedBox(width: 10),
