@@ -28,7 +28,8 @@ class PokemonBlocBloc extends Bloc<PokemonBlocEvent, PokemonBlocState> {
     on<PokemonBlocSearchPokemon>((event, emit) async {
       if (event.q.isNotEmpty) {
         var results = pokemons
-            .where((element) => element.name.contains(event.q))
+            .where((element) =>
+                element.name.toLowerCase().contains(event.q.toLowerCase()))
             .toList();
         emit(PokemonBlocData(pokemons: results));
       } else {
