@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 const Map<String, Color> pokemonTypes = {
   "normal": Color(0xffA0A2A0),
@@ -60,3 +62,23 @@ var pokemonWithoutPhoto = [
   10270,
   10271
 ];
+
+Widget pokemonPicture(String id, bool isSvg, String photo, [BoxFit? boxFit]) {
+  if (isSvg && photo.endsWith('.git')) isSvg = false;
+  return Hero(
+    tag: id,
+    child: isSvg
+        ? SvgPicture.network(
+            photo,
+            placeholderBuilder: (context) => Shimmer.fromColors(
+              baseColor: Colors.black,
+              highlightColor: Colors.white,
+              child: const Center(child: Text('Cargando imagen...')),
+            ),
+          )
+        : Image.network(
+            photo,
+            fit: boxFit,
+          ),
+  );
+}

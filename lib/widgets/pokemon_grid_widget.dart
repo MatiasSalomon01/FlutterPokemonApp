@@ -1,14 +1,13 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/theme_bloc/theme_bloc.dart';
 import 'package:flutter_pokemon_app/constants/constant.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/models.dart';
+import '../screens/pokemon_detail_screen.dart';
 
 class PokemonGrid extends StatefulWidget {
   const PokemonGrid({super.key, required this.pokemons});
@@ -126,75 +125,69 @@ class _PokemonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: setBorder(context),
-          gradient: LinearGradient(
-            colors: setLinearGradient(context),
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PokemonDetailsScreen(id: pokemon.id),
           ),
-          // color: Colors.grey.shade300
         ),
-        padding: const EdgeInsets.all(8),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  // shape: BoxShape.circle,
-                  borderRadius: BorderRadius.circular(10),
-                  color: setColor(context),
-                ),
-                child: Text(
-                  pokemon.id,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      fontFamily: 'PokemonSolid',
-                      letterSpacing: 5),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            border: setBorder(context),
+            gradient: LinearGradient(
+              colors: setLinearGradient(context),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            // color: Colors.grey.shade300
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    // shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(10),
+                    color: setColor(context),
+                  ),
+                  child: Text(
+                    pokemon.id,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        fontFamily: 'PokemonSolid',
+                        letterSpacing: 5),
+                  ),
                 ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1.4,
-                  child: pokemon.isSvg
-                      ? FadeIn(
-                          duration: const Duration(milliseconds: 800),
-                          child: SvgPicture.network(
-                            pokemon.photo,
-                            placeholderBuilder: (context) => Shimmer.fromColors(
-                              baseColor: Colors.black,
-                              highlightColor: Colors.white,
-                              child: const Center(
-                                  child: Text('Cargando imagen...')),
-                            ),
-                          ),
-                        )
-                      : FadeIn(
-                          duration: const Duration(milliseconds: 800),
-                          child: Image.network(pokemon.photo)),
-                ),
-                FittedBox(
-                  child: Text(
-                    pokemon.name.toUpperCase(),
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.4,
+                    child: pokemonPicture(
+                        pokemon.id, pokemon.isSvg, pokemon.photo),
                   ),
-                )
-              ],
-            ),
-          ],
+                  FittedBox(
+                    child: Text(
+                      pokemon.name.toUpperCase(),
+                      style: GoogleFonts.bebasNeue(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

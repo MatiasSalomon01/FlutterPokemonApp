@@ -40,6 +40,9 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         body: BlocBuilder<PokemonBlocBloc, PokemonBlocState>(
+          buildWhen: (previous, current) =>
+              current != PokemonBlocPokemonDetails ||
+              current != PokemonBlocDetailsLoading,
           builder: (context, state) {
             if (state is PokemonBlocLoading) {
               return const LoadingPokemonGrid();

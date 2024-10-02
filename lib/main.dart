@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/theme_bloc/theme_bloc.dart';
+import 'package:flutter_pokemon_app/models/models.dart';
 import 'package:flutter_pokemon_app/screens/home_screen.dart';
+import 'package:flutter_pokemon_app/screens/pokemon_detail_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -41,6 +43,7 @@ class MainApp extends StatelessWidget {
             ),
           ),
           home: const HomeScreen(),
+          // home: PokemonDetailsScreen(id: '1'),
         ),
       ),
     );
