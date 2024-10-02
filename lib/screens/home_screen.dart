@@ -61,7 +61,49 @@ class SearchTextField extends StatelessWidget {
         bloc.add(PokemonBlocSearchPokemon(q: search));
         return [];
       },
+      builder: (context, controller, focusNode) => TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        style: const TextStyle(fontSize: 14),
+        cursorColor: setColor(context),
+        decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              onPressed: () => controller.text = '',
+              icon: const Icon(Icons.close),
+            ),
+            constraints: const BoxConstraints(maxWidth: 1000),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+            isCollapsed: true,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: setBorder(context),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: setBorder(context),
+            ),
+            labelText: 'Buscar pokemones',
+            labelStyle: TextStyle(fontSize: 14, color: setColor(context))),
+      ),
     );
+  }
+
+  Color setColor(BuildContext context) {
+    if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
+      return Colors.black87;
+    } else {
+      return Colors.white70;
+    }
+  }
+
+  BorderSide setBorder(BuildContext context) {
+    if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
+      return const BorderSide(color: Colors.black, width: .5);
+    } else {
+      return const BorderSide(color: Colors.white, width: .5);
+    }
   }
 }
 
