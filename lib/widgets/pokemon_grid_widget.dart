@@ -173,10 +173,12 @@ class _PokemonCard extends StatelessWidget {
                           duration: const Duration(milliseconds: 800),
                           child: Image.network(pokemon.photo)),
                 ),
-                Text(
-                  pokemon.name.toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
+                FittedBox(
+                  child: Text(
+                    pokemon.name.toUpperCase(),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
                 )
               ],
             ),
@@ -190,7 +192,7 @@ class _PokemonCard extends StatelessWidget {
     if (context.watch<ThemeBloc>().state.themeMode == ThemeMode.light) {
       return [Colors.grey.shade300, Colors.grey.shade100];
     } else {
-      return [Colors.black12, Colors.white10];
+      return [Colors.black, Colors.grey.shade900];
     }
   }
 

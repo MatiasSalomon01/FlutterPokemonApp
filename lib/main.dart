@@ -30,8 +30,8 @@ class MainApp extends StatelessWidget {
             ),
           ),
           darkTheme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: Colors.black,
-            appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
+            scaffoldBackgroundColor: Colors.grey.shade900,
+            appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
             iconButtonTheme: const IconButtonThemeData(
               style: ButtonStyle(
                 iconColor: WidgetStatePropertyAll(Colors.white70),
