@@ -172,7 +172,10 @@ class _PokemonCard extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 1.4,
                     child: pokemonPicture(
-                        pokemon.id, pokemon.isSvg, pokemon.photo),
+                      pokemon.id,
+                      pokemon.photo,
+                      placeholder: lodingText,
+                    ),
                   ),
                   FittedBox(
                     child: Text(

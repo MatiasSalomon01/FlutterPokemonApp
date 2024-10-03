@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
@@ -63,22 +64,29 @@ var pokemonWithoutPhoto = [
   10271
 ];
 
-Widget pokemonPicture(String id, bool isSvg, String photo, [BoxFit? boxFit]) {
-  if (isSvg && photo.endsWith('.git')) isSvg = false;
+var lodingText = Shimmer.fromColors(
+  baseColor: Colors.black,
+  highlightColor: Colors.white,
+  child: const Center(child: Text('Cargando imagen...')),
+);
+
+Widget pokemonPicture(String id, String photo,
+    {BoxFit? boxFit, Widget placeholder = const SizedBox()}) {
+  bool isSvg = photo.endsWith('.svg');
   return Hero(
     tag: id,
     child: isSvg
         ? SvgPicture.network(
             photo,
-            placeholderBuilder: (context) => Shimmer.fromColors(
-              baseColor: Colors.black,
-              highlightColor: Colors.white,
-              child: const Center(child: Text('Cargando imagen...')),
-            ),
+            placeholderBuilder: (context) => lodingText,
           )
-        : Image.network(
-            photo,
+        : CachedNetworkImage(
+            imageUrl: photo,
             fit: boxFit,
+            fadeInDuration: Duration.zero,
+            fadeOutDuration: Duration.zero,
+            placeholderFadeInDuration: Duration.zero,
+            placeholder: (context, url) => placeholder,
           ),
   );
 }
