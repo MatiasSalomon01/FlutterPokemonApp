@@ -42,6 +42,7 @@ class MainApp extends StatelessWidget {
             ),
           ),
           home: const HomeScreen(),
+          // home: const PokemonDetailsScreen(name: 'bulbasaur'),
         ),
       ),
     );

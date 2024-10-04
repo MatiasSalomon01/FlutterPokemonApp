@@ -123,7 +123,7 @@ class _Header extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: size.width * .8,
+              width: size.width * .6,
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 // crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,10 +139,11 @@ class _Header extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10),
                   Container(
                     // margin: EdgeInsets.only(top: size.height * .4),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: pokemon.types
                           .map(
                             (type) => Container(
@@ -167,13 +168,128 @@ class _Header extends StatelessWidget {
                           .toList(),
                     ),
                   ),
-                  Text(pokemon.description)
+                  const SizedBox(height: 15),
+                  TextAndLanguageSelector(texts: pokemon.descriptions),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    indent: 30,
+                    endIndent: 30,
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 300,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'Peso,',
+                              style: GoogleFonts.bebasNeue(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            Text(
+                              '${pokemon.weight} kg',
+                              style: GoogleFonts.montserrat(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              'Altura',
+                              style: GoogleFonts.bebasNeue(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            Text(
+                              '${pokemon.height} m',
+                              style: GoogleFonts.montserrat(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              'Habilidad',
+                              style: GoogleFonts.bebasNeue(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            Text(
+                              pokemon.ability,
+                              style: GoogleFonts.montserrat(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
+    );
+  }
+}
+
+class TextAndLanguageSelector extends StatefulWidget {
+  const TextAndLanguageSelector({super.key, required this.texts});
+
+  final List<String> texts;
+
+  @override
+  State<TextAndLanguageSelector> createState() => _LanguageSelectorState();
+}
+
+class _LanguageSelectorState extends State<TextAndLanguageSelector> {
+  int currentValue = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            widget.texts[currentValue],
+            maxLines: 7,
+            style: GoogleFonts.montserrat(fontSize: 15),
+          ),
+        ),
+        const SizedBox(width: 10),
+        DropdownButton(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          borderRadius: BorderRadius.circular(8),
+          underline: Container(),
+          value: currentValue,
+          onChanged: (value) => setState(() => currentValue = value!),
+          items: const [
+            DropdownMenuItem(
+              value: 0,
+              child: Text('Español'),
+            ),
+            DropdownMenuItem(
+              value: 1,
+              child: Text('Ingles'),
+            ),
+            DropdownMenuItem(
+              value: 2,
+              child: Text('Frances'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

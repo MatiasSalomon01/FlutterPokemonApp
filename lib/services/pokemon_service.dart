@@ -17,20 +17,36 @@ class PokemonService {
   Future<Pokemon> getDetails(String name) async {
     print('se peticiona detalle');
     var response = await client.get(Uri.parse('$baseUrl/$name'));
-    var pokemon = Pokemon.fromJson(response.toMap());
+
+    var map = response.toMap();
+    var pokemon = Pokemon.fromJson(map);
 
     var data = await getEvolution(pokemon.name, pokemon.speciesUrl);
     pokemon.evolution = data.$1;
-    pokemon.description = data.$2;
+    pokemon.descriptions = data.$2;
+
+    var response2 =
+        await client.get(Uri.parse(map['abilities'][0]['ability']['url']));
+
+    var response3 =
+        await client.get(Uri.parse(map['abilities'][1]['ability']['url']));
+    var map2 = (response2.toMap()['names'] as List)
+        .where((element) => element['language']['name'] == 'es')
+        .first['name'];
+
+    var map3 = (response3.toMap()['names'] as List)
+        .where((element) => element['language']['name'] == 'es')
+        .first['name'];
+    pokemon.ability = '• $map2\n• $map3';
     return pokemon;
   }
 
-  Future<(Evolution, String)> getEvolution(
+  Future<(Evolution, List<String>)> getEvolution(
       String name, String speciesUrl) async {
     print('se peticiona evoluciones');
 
     List<String> evolutions = [];
-    String description = '';
+    List<String> descriptions = [];
 
     var response = await client.get(Uri.parse(speciesUrl));
 
@@ -40,15 +56,40 @@ class PokemonService {
     var map = response.toMap();
     var map2 = response2.toMap();
 
-    description = (map['flavor_text_entries'] as List)
+    var spanish = (map['flavor_text_entries'] as List)
         .map((e) {
-          if (e['language']['name'] != 'en') {
-            return '';
+          if (e['language']['name'] == 'es') {
+            return (e['flavor_text'] as String).replaceAll('\n', ' ');
           }
-          return (e['flavor_text'] as String).replaceAll('\n', ' ');
+          return '';
         })
         .toSet()
-        .join(" ");
+        .join(" ")
+        .trim();
+
+    var english = (map['flavor_text_entries'] as List)
+        .map((e) {
+          if (e['language']['name'] == 'en') {
+            return (e['flavor_text'] as String).replaceAll('\n', ' ');
+          }
+          return '';
+        })
+        .toSet()
+        .join(" ")
+        .trim();
+
+    var french = (map['flavor_text_entries'] as List)
+        .map((e) {
+          if (e['language']['name'] == 'fr') {
+            return (e['flavor_text'] as String).replaceAll('\n', ' ');
+          }
+          return '';
+        })
+        .toSet()
+        .join(" ")
+        .trim();
+
+    descriptions.addAll([spanish, english, french]);
 
     var chain = map2['chain'];
     evolutions.add(chain['species']['name']);
@@ -82,7 +123,7 @@ class PokemonService {
         hasNext: hasNext,
         nextUrl: nextUrl,
       ),
-      description
+      descriptions
     );
   }
 }

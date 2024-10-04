@@ -8,8 +8,10 @@ class Pokemon {
   final List<Types> types;
   final String speciesUrl;
   Evolution? evolution;
-  String description;
-
+  List<String> descriptions = [];
+  final double weight;
+  final double height;
+  String ability = '';
   Pokemon({
     required this.id,
     required this.name,
@@ -17,7 +19,8 @@ class Pokemon {
     required this.types,
     required this.speciesUrl,
     this.evolution,
-    this.description = '',
+    required this.weight,
+    required this.height,
   });
 
   factory Pokemon.fromJson(Map<String, dynamic> map) {
@@ -34,15 +37,16 @@ class Pokemon {
     if (urls.isEmpty) urls.add(defaultImage);
 
     return Pokemon(
-      id: map["id"],
-      name: map["name"],
-      images: urls,
-      // pokemonTypes[map["types"][0]["type"]["name"]]!
-      types: (map["types"] as List)
-          .map((e) => pokemonTypes[e["type"]["name"]]!)
-          .toList(),
-      speciesUrl: map['species']['url'],
-      evolution: Evolution(),
-    );
+        id: map["id"],
+        name: map["name"],
+        images: urls,
+        // pokemonTypes[map["types"][0]["type"]["name"]]!
+        types: (map["types"] as List)
+            .map((e) => pokemonTypes[e["type"]["name"]]!)
+            .toList(),
+        speciesUrl: map['species']['url'],
+        evolution: Evolution(),
+        weight: (map['weight'] as int) / 10,
+        height: (map['height'] as int) / 10);
   }
 }
