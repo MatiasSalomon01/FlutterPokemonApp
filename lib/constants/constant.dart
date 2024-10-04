@@ -3,28 +3,117 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
-const Map<String, Color> pokemonTypes = {
-  "normal": Color(0xffA0A2A0),
-  "fighting": Color(0xffFF8100),
-  "flying": Color(0xff82BAF0),
-  "poison": Color(0xff923FCC),
-  "ground": Color(0xff92501B),
-  "rock": Color(0xffB0AB82),
-  "bug": Color(0xff92A212),
-  "ghost": Color(0xff713F71),
-  "steel": Color(0xff60A2B9),
-  "fire": Color(0xffE72324),
-  "water": Color(0xff2481F0),
-  "grass": Color(0xff3DA224),
-  "electric": Color(0xffFAC100),
-  "psychic": Color(0xffEF3F7A),
-  "ice": Color(0xff3DD9FF),
-  "dragon": Color(0xff4F60E2),
-  "dark": Color(0xff4F3F3D),
-  "fairy": Color(0xffEF71F0),
-  "stellar": Colors.blueGrey,
-  "unknown": Colors.black26,
-  "shadow": Colors.black54,
+class Types {
+  final String name;
+  final Color color;
+  final String badge;
+
+  Types({required this.name, required this.color, required this.badge});
+}
+
+Map<String, Types> pokemonTypes = {
+  'normal': Types(
+    name: 'normal´',
+    color: const Color(0xffA8A77A),
+    badge: 'normal.png',
+  ),
+  'fire': Types(
+    name: 'fire',
+    color: const Color(0xffEE8130),
+    badge: 'fire.png',
+  ),
+  'water': Types(
+    name: 'water',
+    color: const Color(0xff6390F0),
+    badge: 'water.png',
+  ),
+  'electric': Types(
+    name: 'electric',
+    color: const Color(0xffF7D02C),
+    badge: 'electric.png',
+  ),
+  'grass': Types(
+    name: 'grass',
+    color: const Color(0xff7AC74C),
+    badge: 'grass.png',
+  ),
+  'ice': Types(
+    name: 'ice',
+    color: const Color(0xff96D9D6),
+    badge: 'ice.png',
+  ),
+  'fighting': Types(
+    name: 'fighting',
+    color: const Color(0xffC22E28),
+    badge: 'fighting.png',
+  ),
+  'poison': Types(
+    name: 'poison',
+    color: const Color(0xffA33EA1),
+    badge: 'poison.png',
+  ),
+  'ground': Types(
+    name: 'ground',
+    color: const Color(0xffE2BF65),
+    badge: 'ground.png',
+  ),
+  'flying': Types(
+    name: 'flying',
+    color: const Color(0xffA98FF3),
+    badge: 'flying.png',
+  ),
+  'psychic': Types(
+    name: 'psychic',
+    color: const Color(0xffF95587),
+    badge: 'psychic.png',
+  ),
+  'bug': Types(
+    name: 'bug',
+    color: const Color(0xffA6B91A),
+    badge: 'bug.png',
+  ),
+  'rock': Types(
+    name: 'rock',
+    color: const Color(0xffB6A136),
+    badge: 'rock.png',
+  ),
+  'ghost': Types(
+    name: 'ghost',
+    color: const Color(0xff735797),
+    badge: 'ghost.png',
+  ),
+  'dragon': Types(
+    name: 'dragon',
+    color: const Color(0xff6F35FC),
+    badge: 'dragon.png',
+  ),
+  'dark': Types(
+    name: 'dark',
+    color: const Color(0xff705746),
+    badge: 'dark.png',
+  ),
+  'steel': Types(
+    name: 'steel',
+    color: const Color(0xffB7B7CE),
+    badge: 'steel.png',
+  ),
+  'fairy':
+      Types(name: 'fairy', color: const Color(0xffD685AD), badge: 'fairy.png'),
+  "stellar": Types(
+    name: "stellar",
+    color: Colors.blueGrey,
+    badge: 'normal.png',
+  ),
+  "unknown": Types(
+    name: "unknown",
+    color: Colors.black26,
+    badge: 'normal.png',
+  ),
+  "shadow": Types(
+    name: "shadow",
+    color: Colors.black54,
+    badge: 'normal.png',
+  ),
 };
 
 int getCrossAxisCount(double width) {

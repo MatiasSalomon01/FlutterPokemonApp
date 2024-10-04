@@ -129,7 +129,7 @@ class _PokemonCard extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PokemonDetailsScreen(id: pokemon.id),
+            builder: (context) => PokemonDetailsScreen(name: pokemon.name),
           ),
         ),
         child: Container(

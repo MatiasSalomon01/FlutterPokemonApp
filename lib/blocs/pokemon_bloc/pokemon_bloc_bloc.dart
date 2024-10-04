@@ -36,11 +36,5 @@ class PokemonBlocBloc extends Bloc<PokemonBlocEvent, PokemonBlocState> {
         emit(PokemonBlocData(pokemons: pokemons));
       }
     });
-
-    on<PokemonBlocFetchDetails>((event, emit) async {
-      emit(PokemonBlocDetailsLoading());
-      var pokemon = await service.getDetails(event.id);
-      emit(PokemonBlocPokemonDetails(pokemon: pokemon));
-    });
   }
 }

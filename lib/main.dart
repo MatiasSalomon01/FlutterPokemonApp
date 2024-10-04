@@ -41,8 +41,7 @@ class MainApp extends StatelessWidget {
               ),
             ),
           ),
-          // home: const HomeScreen(),
-          home: const PokemonDetailsScreen(id: '1'),
+          home: const HomeScreen(),
         ),
       ),
     );
