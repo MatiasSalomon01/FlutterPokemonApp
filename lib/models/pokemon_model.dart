@@ -12,6 +12,7 @@ class Pokemon {
   final double weight;
   final double height;
   String ability = '';
+  final Stats stats;
   Pokemon({
     required this.id,
     required this.name,
@@ -21,6 +22,7 @@ class Pokemon {
     this.evolution,
     required this.weight,
     required this.height,
+    required this.stats,
   });
 
   factory Pokemon.fromJson(Map<String, dynamic> map) {
@@ -37,16 +39,61 @@ class Pokemon {
     if (urls.isEmpty) urls.add(defaultImage);
 
     return Pokemon(
-        id: map["id"],
-        name: map["name"],
-        images: urls,
-        // pokemonTypes[map["types"][0]["type"]["name"]]!
-        types: (map["types"] as List)
-            .map((e) => pokemonTypes[e["type"]["name"]]!)
-            .toList(),
-        speciesUrl: map['species']['url'],
-        evolution: Evolution(),
-        weight: (map['weight'] as int) / 10,
-        height: (map['height'] as int) / 10);
+      id: map["id"],
+      name: map["name"],
+      images: urls,
+      // pokemonTypes[map["types"][0]["type"]["name"]]!
+      types: (map["types"] as List)
+          .map((e) => pokemonTypes[e["type"]["name"]]!)
+          .toList(),
+      speciesUrl: map['species']['url'],
+      evolution: Evolution(),
+      weight: (map['weight'] as int) / 10,
+      height: (map['height'] as int) / 10,
+      stats: Stats(
+        hp: map['stats'][0]['stat']['name'],
+        hpValue: map['stats'][0]['base_stat'],
+        attack: map['stats'][1]['stat']['name'],
+        attackValue: map['stats'][1]['base_stat'],
+        defense: map['stats'][2]['stat']['name'],
+        defenseValue: map['stats'][2]['base_stat'],
+        specialAttack: map['stats'][3]['stat']['name'],
+        specialAttackValue: map['stats'][3]['base_stat'],
+        specialDefense: map['stats'][4]['stat']['name'],
+        specialDefenseValue: map['stats'][4]['base_stat'],
+        speed: map['stats'][5]['stat']['name'],
+        speedValue: map['stats'][5]['base_stat'],
+      ),
+    );
   }
+}
+
+class Stats {
+  final String hp;
+  final int hpValue;
+  final String attack;
+  final int attackValue;
+  final String defense;
+  final int defenseValue;
+  final String specialAttack;
+  final int specialAttackValue;
+  final String specialDefense;
+  final int specialDefenseValue;
+  final String speed;
+  final int speedValue;
+
+  Stats({
+    required this.hp,
+    required this.hpValue,
+    required this.attack,
+    required this.attackValue,
+    required this.defense,
+    required this.defenseValue,
+    required this.specialAttack,
+    required this.specialAttackValue,
+    required this.specialDefense,
+    required this.specialDefenseValue,
+    required this.speed,
+    required this.speedValue,
+  });
 }

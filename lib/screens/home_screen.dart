@@ -19,6 +19,8 @@ class HomeScreen extends StatelessWidget {
       lazy: false,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           title: LayoutBuilder(
             builder: (context, constraints) => Row(
               children: [

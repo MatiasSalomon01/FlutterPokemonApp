@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pokemon_app/blocs/bloc/pokemon_detail_bloc.dart';
-import 'package:flutter_pokemon_app/blocs/pokemon_bloc/pokemon_bloc_bloc.dart';
 import 'package:flutter_pokemon_app/constants/constant.dart';
 import 'package:flutter_pokemon_app/models/models.dart';
 import 'package:flutter_pokemon_app/services/pokemon_service.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PokemonDetailsScreen extends StatelessWidget {
@@ -23,7 +23,8 @@ class PokemonDetailsScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          // elevation: 0,
         ),
         body: BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
           builder: (context, state) {
@@ -67,11 +68,22 @@ class _Header extends StatelessWidget {
                     child: Container(),
                   ),
                 ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SvgPicture.asset(
+                    'assets/pokeball.svg',
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withOpacity(.3),
+                        BlendMode.srcIn),
+                  ),
+                ),
                 ImageCarousel(
                   id: pokemon.id.toString(),
                   images: pokemon.images,
                 ),
-                Align(
+                Container(
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     pokemon.name.toUpperCase(),
@@ -86,13 +98,9 @@ class _Header extends StatelessWidget {
             ),
           ),
           Container(
-            // width: size.width * .8,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             constraints: BoxConstraints(maxWidth: 1200),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisSize: ,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -131,67 +139,239 @@ class _Header extends StatelessWidget {
                   endIndent: 20,
                 ),
                 const SizedBox(height: 10),
-                SizedBox(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'Peso',
-                            style: GoogleFonts.bebasNeue(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                          Text(
-                            '${pokemon.weight} kg',
-                            style: GoogleFonts.montserrat(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Altura',
-                            style: GoogleFonts.bebasNeue(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                          Text(
-                            '${pokemon.height} m',
-                            style: GoogleFonts.montserrat(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Habilidad',
-                            style: GoogleFonts.bebasNeue(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                          Text(
-                            pokemon.ability,
-                            style: GoogleFonts.montserrat(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                MiddleInfo(pokemon: pokemon),
+                const SizedBox(height: 10),
+                const Divider(
+                  indent: 20,
+                  endIndent: 20,
+                ),
+                const SizedBox(height: 10),
+                StatsSection(stats: pokemon.stats),
               ],
             ),
           ),
-          const SizedBox(height: 30),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Icons.next
+                if (pokemon.evolution!.hasPrevious)
+                  ElevatedButton(
+                      onPressed: () {
+                        context.read<PokemonDetailBloc>().add(
+                              PokemonDetailFetch(
+                                  name: pokemon.evolution!.previousUrl),
+                            );
+                      },
+                      child: const Text('Anterior')),
+
+                if (pokemon.evolution!.hasNext) ...[
+                  const Spacer(),
+                  ElevatedButton(
+                      onPressed: () {
+                        context.read<PokemonDetailBloc>().add(
+                              PokemonDetailFetch(
+                                  name: pokemon.evolution!.nextUrl),
+                            );
+                      },
+                      child: const Text('Siguiente')),
+                ]
+              ],
+            ),
+          ),
+          const SizedBox(height: 20)
+        ],
+      ),
+    );
+  }
+}
+
+class StatsSection extends StatelessWidget {
+  const StatsSection({super.key, required this.stats});
+
+  final Stats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'Estadisticas',
+          style: GoogleFonts.bebasNeue(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Stat(
+          name: 'HP',
+          value: stats.hpValue,
+          color: Colors.green,
+        ),
+        Stat(
+          name: 'ATK',
+          value: stats.attackValue,
+          color: Colors.red,
+        ),
+        Stat(
+          name: 'DEF',
+          value: stats.defenseValue,
+          color: Colors.blue,
+        ),
+        Stat(
+          name: 'SATK',
+          value: stats.specialAttackValue,
+          color: Colors.red.shade900,
+        ),
+        Stat(
+          name: 'SDEF',
+          value: stats.specialDefenseValue,
+          color: Colors.blue.shade900,
+        ),
+        Stat(
+          name: 'VEL',
+          value: stats.speedValue,
+          color: Colors.amber,
+        ),
+      ],
+    );
+  }
+}
+
+class Stat extends StatelessWidget {
+  const Stat({
+    super.key,
+    required this.name,
+    required this.value,
+    required this.color,
+  });
+
+  final String name;
+  final int value;
+  final Color color;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Container(
+            // color: Colors.amber,
+            width: 35, // Ajusta este valor según el ancho máximo del nombre
+            child: Text(
+              name,
+              textAlign: TextAlign.end,
+              style: GoogleFonts.montserrat(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            '  |  ',
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              // fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '$value',
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(left: 15),
+              child: SliderTheme(
+                data: SliderThemeData(
+                  trackHeight: 2,
+                  activeTrackColor: color,
+                  inactiveTrackColor: color.withOpacity(.3),
+                  thumbShape: SliderComponentShape.noThumb,
+                  overlayShape: SliderComponentShape.noOverlay,
+                ),
+                child: Slider(
+                  max: 255,
+                  value: value.toDouble(),
+                  onChanged: (value) {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MiddleInfo extends StatelessWidget {
+  const MiddleInfo({
+    super.key,
+    required this.pokemon,
+  });
+
+  final Pokemon pokemon;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              Text(
+                'Peso',
+                style: GoogleFonts.bebasNeue(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+              Text(
+                '${pokemon.weight} kg',
+                style: GoogleFonts.montserrat(fontSize: 15),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                'Altura',
+                style: GoogleFonts.bebasNeue(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+              Text(
+                '${pokemon.height} m',
+                style: GoogleFonts.montserrat(fontSize: 15),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                'Habilidad',
+                style: GoogleFonts.bebasNeue(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+              Text(
+                pokemon.ability,
+                style: GoogleFonts.montserrat(fontSize: 15),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -320,6 +500,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           flex: 2,
           child: Container(
             // color: Colors.amber,
+            constraints: const BoxConstraints(maxHeight: 220),
             alignment: Alignment.bottomCenter,
             child: PageView.builder(
               physics: const NeverScrollableScrollPhysics(),
