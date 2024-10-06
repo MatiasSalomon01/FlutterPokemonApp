@@ -85,7 +85,7 @@ class _PokemonGridState extends State<PokemonGrid> {
         },
         child: GridView.builder(
           controller: scrollController,
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: getCrossAxisCount(constraints.maxWidth),
             crossAxisSpacing: 10,

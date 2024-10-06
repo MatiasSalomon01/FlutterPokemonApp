@@ -26,7 +26,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets: 
-    - 'assets/types/'
+    - 'assets/'
   fonts:
     - family: PokemonSolid
       fonts:

@@ -25,19 +25,15 @@ class PokemonService {
     pokemon.evolution = data.$1;
     pokemon.descriptions = data.$2;
 
-    var response2 =
-        await client.get(Uri.parse(map['abilities'][0]['ability']['url']));
-
-    var response3 =
-        await client.get(Uri.parse(map['abilities'][1]['ability']['url']));
-    var map2 = (response2.toMap()['names'] as List)
-        .where((element) => element['language']['name'] == 'es')
-        .first['name'];
-
-    var map3 = (response3.toMap()['names'] as List)
-        .where((element) => element['language']['name'] == 'es')
-        .first['name'];
-    pokemon.ability = '• $map2\n• $map3';
+    List<String> abilities = [];
+    for (var e in map['abilities'] as List) {
+      var x = await client.get(Uri.parse(e['ability']['url']));
+      var value = (x.toMap()['names'] as List)
+          .where((element) => element['language']['name'] == 'es')
+          .first['name'];
+      abilities.add('• $value');
+    }
+    pokemon.ability = abilities.join('\n');
     return pokemon;
   }
 

@@ -27,9 +27,10 @@ class PokemonDetailsScreen extends StatelessWidget {
         ),
         body: BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
           builder: (context, state) {
-            if (state is PokemonBlocLoading) {
-              return const CircularProgressIndicator();
+            if (state is PokemonDetailLoading) {
+              return const Center(child: CircularProgressIndicator());
             }
+
             if (state is PokemonDetailSuccess) {
               return _Header(pokemon: state.pokemon);
             }
@@ -51,194 +52,141 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     // print(pokemon.description);
-    return Container(
-      // color: Colors.amber,
-      height: size.height,
-      width: size.width,
-      // margin: EdgeInsets.symmetric(horizontal: size.width * .1),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              // color: Colors.red,
-              // height: size.height * .35,
-              // width: size.width,
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Container(
-                    height: size.height * .30,
-                    // width: size.width,
-                    // constraints: BoxConstraints(maxHeight: size.height * .35),
-                    child: CustomPaint(
-                      painter: Background(color: pokemon.types[0].color),
-                      child: Container(
-                        width: size.width,
-                        // color: Colors.red,
-                        // alignment: Alignment.bottomCenter,
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Icons.next
-                            if (pokemon.evolution!.hasPrevious)
-                              ElevatedButton(
-                                  onPressed: () {
-                                    context.read<PokemonDetailBloc>().add(
-                                          PokemonDetailFetch(
-                                              name: pokemon
-                                                  .evolution!.previousUrl),
-                                        );
-                                  },
-                                  child: const Text('Anterior')),
-                            if (pokemon.evolution!.hasNext) ...[
-                              const Spacer(),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    context.read<PokemonDetailBloc>().add(
-                                          PokemonDetailFetch(
-                                              name: pokemon.evolution!.nextUrl),
-                                        );
-                                  },
-                                  child: const Text('Siguiente')),
-                            ]
-                          ],
-                        ),
-                      ),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: size.height * .4,
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: size.height * .35,
+                  child: CustomPaint(
+                    painter: Background(color: pokemon.types[0].color),
+                    child: Container(),
+                  ),
+                ),
+                ImageCarousel(
+                  id: pokemon.id.toString(),
+                  images: pokemon.images,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    pokemon.name.toUpperCase(),
+                    style: GoogleFonts.bebasNeue(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
                     ),
                   ),
-                  Container(
-                    // color: Colors.red.withOpacity(.5),
-                    // padding: const EdgeInsets.only(top: 70),
-                    // constraints: BoxConstraints(maxHeight: size.height * .35),
-                    height: size.height * .4,
-                    alignment: Alignment.bottomCenter,
-                    child: ImageCarousel(
-                      id: pokemon.id.toString(),
-                      images: pokemon.images,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: size.width * .6,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisSize: ,
-                children: [
-                  FittedBox(
-                    child: Text(
-                      pokemon.name.toUpperCase(),
-                      style: GoogleFonts.bebasNeue(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
+          ),
+          Container(
+            // width: size.width * .8,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            constraints: BoxConstraints(maxWidth: 1200),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisSize: ,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: pokemon.types
+                      .map(
+                        (type) => Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: FilterChip(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 8,
+                              ),
+                              avatar: Image.asset(
+                                'assets/types/${type.badge}',
+                              ),
+                              avatarBoxConstraints:
+                                  const BoxConstraints(maxWidth: 20),
+                              shape: const StadiumBorder(side: BorderSide.none),
+                              onSelected: (value) {},
+                              labelPadding: const EdgeInsets.only(left: 5),
+                              label: Text(type.name)),
+                        ),
+                      )
+                      .toList(),
+                ),
+                TextAndLanguageSelector(texts: pokemon.descriptions),
+                const SizedBox(height: 10),
+                const Divider(
+                  indent: 20,
+                  endIndent: 20,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            'Peso,',
+                            style: GoogleFonts.bebasNeue(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          Text(
+                            '${pokemon.weight} kg',
+                            style: GoogleFonts.montserrat(fontSize: 15),
+                          ),
+                        ],
                       ),
-                    ),
+                      Column(
+                        children: [
+                          Text(
+                            'Altura',
+                            style: GoogleFonts.bebasNeue(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          Text(
+                            '${pokemon.height} m',
+                            style: GoogleFonts.montserrat(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            'Habilidad',
+                            style: GoogleFonts.bebasNeue(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          Text(
+                            pokemon.ability,
+                            style: GoogleFonts.montserrat(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10),
-                  Container(
-                    // margin: EdgeInsets.only(top: size.height * .4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: pokemon.types
-                          .map(
-                            (type) => Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: FilterChip(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 6,
-                                    horizontal: 8,
-                                  ),
-                                  avatar: Image.asset(
-                                    'assets/types/${type.badge}',
-                                  ),
-                                  avatarBoxConstraints:
-                                      const BoxConstraints(maxWidth: 20),
-                                  shape: const StadiumBorder(
-                                      side: BorderSide.none),
-                                  onSelected: (value) {},
-                                  labelPadding: const EdgeInsets.only(left: 5),
-                                  label: Text(type.name)),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  TextAndLanguageSelector(texts: pokemon.descriptions),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    indent: 30,
-                    endIndent: 30,
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 300,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              'Peso,',
-                              style: GoogleFonts.bebasNeue(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            Text(
-                              '${pokemon.weight} kg',
-                              style: GoogleFonts.montserrat(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'Altura',
-                              style: GoogleFonts.bebasNeue(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            Text(
-                              '${pokemon.height} m',
-                              style: GoogleFonts.montserrat(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              'Habilidad',
-                              style: GoogleFonts.bebasNeue(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            Text(
-                              pokemon.ability,
-                              style: GoogleFonts.montserrat(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
-            const SizedBox(height: 30),
-          ],
-        ),
+          ),
+          const SizedBox(height: 30),
+        ],
       ),
     );
   }
@@ -257,39 +205,56 @@ class _LanguageSelectorState extends State<TextAndLanguageSelector> {
   int currentValue = 0;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            widget.texts[currentValue],
-            maxLines: 7,
-            style: GoogleFonts.montserrat(fontSize: 15),
-          ),
+    var dropdown = DropdownButton(
+      padding: const EdgeInsets.only(left: 10, top: 0, bottom: 0),
+      menuWidth: 90,
+      borderRadius: BorderRadius.circular(8),
+      underline: Container(),
+      value: currentValue,
+      onChanged: (value) => setState(() => currentValue = value!),
+      // style: TextStyle(
+      //   fontSize: 15,
+      // ),
+      items: const [
+        DropdownMenuItem(
+          value: 0,
+          child: Text('Español'),
         ),
-        const SizedBox(width: 10),
-        DropdownButton(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          borderRadius: BorderRadius.circular(8),
-          underline: Container(),
-          value: currentValue,
-          onChanged: (value) => setState(() => currentValue = value!),
-          items: const [
-            DropdownMenuItem(
-              value: 0,
-              child: Text('Español'),
-            ),
-            DropdownMenuItem(
-              value: 1,
-              child: Text('Ingles'),
-            ),
-            DropdownMenuItem(
-              value: 2,
-              child: Text('Frances'),
-            ),
-          ],
+        DropdownMenuItem(
+          value: 1,
+          child: Text('Ingles'),
+        ),
+        DropdownMenuItem(
+          value: 2,
+          child: Text('Frances'),
         ),
       ],
+    );
+
+    var text = Text(
+      widget.texts[currentValue],
+      maxLines: 7,
+      style: GoogleFonts.montserrat(fontSize: 15),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 400) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [dropdown, text],
+          );
+        } else {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              text,
+              const SizedBox(width: 10),
+              dropdown,
+            ],
+          );
+        }
+      },
     );
   }
 }
@@ -329,24 +294,24 @@ class _ImageCarouselState extends State<ImageCarousel> {
       // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
-          child: Align(
+          child: Container(
             alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () {
-                scrollController.previousPage(
-                    duration: const Duration(milliseconds: 1),
-                    curve: Curves.linear);
-              },
-              style: const ButtonStyle(
-                shape: WidgetStatePropertyAll(CircleBorder()),
-                padding: WidgetStatePropertyAll(EdgeInsets.zero),
-              ),
-              child: const FittedBox(child: Icon(Icons.arrow_back_ios_rounded)),
+            child: MaterialButton(
+              onPressed: () => scrollController.previousPage(
+                  duration: const Duration(milliseconds: 1),
+                  curve: Curves.linear),
+              padding: EdgeInsets.zero,
+              minWidth: 30,
+              shape: const CircleBorder(),
+              highlightElevation: 0,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: const Icon(Icons.arrow_back_ios_rounded, size: 16),
             ),
           ),
         ),
         // SizedBox(width: 5),
         Expanded(
+          flex: 2,
           child: Container(
             // color: Colors.amber,
             alignment: Alignment.bottomCenter,
@@ -374,18 +339,17 @@ class _ImageCarouselState extends State<ImageCarousel> {
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-                onPressed: () {
-                  scrollController.nextPage(
-                      duration: const Duration(milliseconds: 1),
-                      curve: Curves.linear);
-                },
-                style: const ButtonStyle(
-                  shape: WidgetStatePropertyAll(CircleBorder()),
-                  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                ),
-                child: const FittedBox(
-                    child: Icon(Icons.arrow_forward_ios_rounded))),
+            child: MaterialButton(
+              onPressed: () => scrollController.nextPage(
+                  duration: const Duration(milliseconds: 1),
+                  curve: Curves.linear),
+              padding: EdgeInsets.zero,
+              minWidth: 30,
+              shape: const CircleBorder(),
+              highlightElevation: 0,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+            ),
           ),
         ),
       ],
@@ -413,7 +377,7 @@ class Background extends CustomPainter {
           gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     double heightControl =
-        size.width < 1000 ? size.height * .5 : size.height * .65;
+        size.width < 1000 ? size.height * .6 : size.height * .65;
     double height = size.width < 1000 ? size.height * .8 : size.height;
 
     //     double widthControl =

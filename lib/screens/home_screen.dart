@@ -23,9 +23,9 @@ class HomeScreen extends StatelessWidget {
             builder: (context, constraints) => Row(
               children: [
                 if (constraints.maxWidth > 400) ...[
-                  Image.network(
-                    'https://res.cloudinary.com/dowuc5zob/image/upload/v1727881049/Pok%C3%A9dex_logo_nrtwbu.png',
-                    height: 55,
+                  Image.asset(
+                    'pokedex.png',
+                    height: 45,
                   ),
                   const SizedBox(width: 10),
                 ],
@@ -69,40 +69,43 @@ class SearchTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     var bloc = context.read<PokemonBlocBloc>();
 
-    return TypeAheadField<PokemonSearchResult>(
-      emptyBuilder: (_) => const SizedBox(),
-      errorBuilder: (_, __) => const SizedBox(),
-      itemBuilder: (_, __) => const SizedBox(),
-      onSelected: (_) {},
-      suggestionsCallback: (search) {
-        bloc.add(PokemonBlocSearchPokemon(q: search));
-        return [];
-      },
-      builder: (context, controller, focusNode) => TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        style: const TextStyle(fontSize: 14),
-        cursorColor: setColor(context),
-        decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: IconButton(
-              onPressed: () => controller.text = '',
-              icon: const Icon(Icons.close),
-            ),
-            constraints: const BoxConstraints(maxWidth: 1000),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-            isCollapsed: true,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: setBorder(context),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: setBorder(context),
-            ),
-            labelText: 'Buscar pokemones',
-            labelStyle: TextStyle(fontSize: 14, color: setColor(context))),
+    return SizedBox(
+      height: 45,
+      child: TypeAheadField<PokemonSearchResult>(
+        emptyBuilder: (_) => const SizedBox(),
+        errorBuilder: (_, __) => const SizedBox(),
+        itemBuilder: (_, __) => const SizedBox(),
+        onSelected: (_) {},
+        suggestionsCallback: (search) {
+          bloc.add(PokemonBlocSearchPokemon(q: search));
+          return [];
+        },
+        builder: (context, controller, focusNode) => TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          style: const TextStyle(fontSize: 14),
+          cursorColor: setColor(context),
+          decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                onPressed: () => controller.text = '',
+                icon: const Icon(Icons.close),
+              ),
+              constraints: const BoxConstraints(maxWidth: 1000),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+              isCollapsed: true,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: setBorder(context),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: setBorder(context),
+              ),
+              labelText: 'Buscar pokemones',
+              labelStyle: TextStyle(fontSize: 14, color: setColor(context))),
+        ),
       ),
     );
   }
@@ -153,57 +156,85 @@ class _ThemeButtonsState extends State<ThemeButtons> {
   @override
   Widget build(BuildContext context) {
     isLightMode = context.watch<ThemeBloc>().state.themeMode == ThemeMode.light;
-    return Container(
-      width: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: setBorder(),
-      ),
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            left: isLightMode ? 0 : 50,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              width: 50,
-              decoration: BoxDecoration(
-                  color: setColor(),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isLightMode = true; // Cambiar el estado
-                    });
-                    context.read<ThemeBloc>().add(
-                        ThemeEventLightMode()); // Enviar evento de light mode
-                  },
-                  icon: const Icon(Icons.light_mode),
-                ),
-              ),
-              // Botón de modo oscuro
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isLightMode = false; // Cambiar el estado
-                    });
-                    context.read<ThemeBloc>().add(
-                        ThemeEventDarkMode()); // Enviar evento de dark mode
-                  },
-                  icon: const Icon(Icons.dark_mode),
-                ),
-              ),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isLightMode = !isLightMode;
+        });
+        isLightMode
+            ? context.read<ThemeBloc>().add(ThemeEventLightMode())
+            : context.read<ThemeBloc>().add(ThemeEventDarkMode());
+      },
+      child: Container(
+        width: 45,
+        height: 45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: setColor(),
+          border: setBorder(),
+        ),
+        child: isLightMode
+            ? const Icon(Icons.light_mode)
+            : const Icon(Icons.dark_mode),
+
+        // IconButton(
+        //         onPressed: () {
+        //           setState(() {
+        //             isLightMode = true; // Cambiar el estado
+        //           });
+        //           context.read<ThemeBloc>().add(
+        //               ThemeEventLightMode()); // Enviar evento de light mode
+        //         },
+        //         icon: const Icon(Icons.light_mode),
+        //       ),
+
+        // ,
+        // child: Stack(
+        //   children: [
+        // AnimatedPositioned(
+        //   duration: const Duration(milliseconds: 300),
+        //   left: isLightMode ? 0 : 50,
+        //   top: 0,
+        //   bottom: 0,
+        //   child: Container(
+        //     width: 50,
+        //     decoration: BoxDecoration(
+        //         color: setColor(),
+        //         borderRadius: BorderRadius.all(Radius.circular(12))),
+        //   ),
+        // ),
+        // Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   children: [
+        //     Expanded(
+        //       child: IconButton(
+        //         onPressed: () {
+        //           setState(() {
+        //             isLightMode = true; // Cambiar el estado
+        //           });
+        //           context.read<ThemeBloc>().add(
+        //               ThemeEventLightMode()); // Enviar evento de light mode
+        //         },
+        //         icon: const Icon(Icons.light_mode),
+        //       ),
+        //     ),
+        //     // Botón de modo oscuro
+        //     Expanded(
+        //       child: IconButton(
+        //         onPressed: () {
+        //           setState(() {
+        //             isLightMode = false; // Cambiar el estado
+        //           });
+        //           context.read<ThemeBloc>().add(
+        //               ThemeEventDarkMode()); // Enviar evento de dark mode
+        //         },
+        //         icon: const Icon(Icons.dark_mode),
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        //   ],
+        // ),
       ),
     );
   }
