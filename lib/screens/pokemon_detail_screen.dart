@@ -100,20 +100,26 @@ class _Header extends StatelessWidget {
                       .map(
                         (type) => Container(
                           margin: const EdgeInsets.only(right: 10),
-                          child: FilterChip(
+                          child: Theme(
+                            data: ThemeData(
+                              highlightColor: Colors.transparent,
+                              splashFactory: NoSplash.splashFactory,
+                            ),
+                            child: FilterChip(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 6,
                                 horizontal: 8,
                               ),
-                              avatar: Image.asset(
-                                'assets/types/${type.badge}',
-                              ),
+                              avatar: Image.asset('assets/types/${type.badge}'),
                               avatarBoxConstraints:
                                   const BoxConstraints(maxWidth: 20),
                               shape: const StadiumBorder(side: BorderSide.none),
+                              // onSelected: null,
                               onSelected: (value) {},
                               labelPadding: const EdgeInsets.only(left: 5),
-                              label: Text(type.name)),
+                              label: Text(type.name),
+                            ),
+                          ),
                         ),
                       )
                       .toList(),
@@ -134,7 +140,7 @@ class _Header extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            'Peso,',
+                            'Peso',
                             style: GoogleFonts.bebasNeue(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
