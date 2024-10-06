@@ -13,42 +13,42 @@ class Types {
 
 Map<String, Types> pokemonTypes = {
   'normal': Types(
-    name: 'normal´',
+    name: 'Normal',
     color: const Color(0xffA8A77A),
     badge: 'normal.png',
   ),
   'fire': Types(
-    name: 'fire',
+    name: 'Fuego',
     color: const Color(0xffEE8130),
     badge: 'fire.png',
   ),
   'water': Types(
-    name: 'water',
+    name: 'Agua',
     color: const Color(0xff6390F0),
     badge: 'water.png',
   ),
   'electric': Types(
-    name: 'electric',
+    name: 'Electrico',
     color: const Color(0xffF7D02C),
     badge: 'electric.png',
   ),
   'grass': Types(
-    name: 'grass',
+    name: 'Planta',
     color: const Color(0xff7AC74C),
     badge: 'grass.png',
   ),
   'ice': Types(
-    name: 'ice',
+    name: 'Hielo',
     color: const Color(0xff96D9D6),
     badge: 'ice.png',
   ),
   'fighting': Types(
-    name: 'fighting',
+    name: 'Lucha',
     color: const Color(0xffC22E28),
     badge: 'fighting.png',
   ),
   'poison': Types(
-    name: 'poison',
+    name: 'Veneno',
     color: const Color(0xffA33EA1),
     badge: 'poison.png',
   ),
@@ -58,59 +58,62 @@ Map<String, Types> pokemonTypes = {
     badge: 'ground.png',
   ),
   'flying': Types(
-    name: 'flying',
+    name: 'Volador',
     color: const Color(0xffA98FF3),
     badge: 'flying.png',
   ),
   'psychic': Types(
-    name: 'psychic',
+    name: 'Psiquico',
     color: const Color(0xffF95587),
     badge: 'psychic.png',
   ),
   'bug': Types(
-    name: 'bug',
+    name: 'Bicho',
     color: const Color(0xffA6B91A),
     badge: 'bug.png',
   ),
   'rock': Types(
-    name: 'rock',
+    name: 'Roca',
     color: const Color(0xffB6A136),
     badge: 'rock.png',
   ),
   'ghost': Types(
-    name: 'ghost',
+    name: 'Fantasma',
     color: const Color(0xff735797),
     badge: 'ghost.png',
   ),
   'dragon': Types(
-    name: 'dragon',
+    name: 'Dragon',
     color: const Color(0xff6F35FC),
     badge: 'dragon.png',
   ),
   'dark': Types(
-    name: 'dark',
+    name: 'Siniestro',
     color: const Color(0xff705746),
     badge: 'dark.png',
   ),
   'steel': Types(
-    name: 'steel',
+    name: 'Acero',
     color: const Color(0xffB7B7CE),
     badge: 'steel.png',
   ),
-  'fairy':
-      Types(name: 'fairy', color: const Color(0xffD685AD), badge: 'fairy.png'),
+  'fairy': Types(
+    name: 'Hada',
+    color: const Color(0xffD685AD),
+    badge: 'fairy.png',
+  ),
   "stellar": Types(
-    name: "stellar",
+    name: "Estelar",
     color: Colors.blueGrey,
     badge: 'normal.png',
   ),
   "unknown": Types(
-    name: "unknown",
+    name: "Desconocido",
     color: Colors.black26,
     badge: 'normal.png',
   ),
   "shadow": Types(
-    name: "shadow",
+    name: "Sombra",
     color: Colors.black54,
     badge: 'normal.png',
   ),
