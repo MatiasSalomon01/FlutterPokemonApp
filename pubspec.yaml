@@ -27,6 +27,7 @@ flutter:
   uses-material-design: true
   assets: 
     - 'assets/'
+    - 'assets/types/'
   fonts:
     - family: PokemonSolid
       fonts:

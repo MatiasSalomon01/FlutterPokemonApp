@@ -52,7 +52,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    // print(pokemon.description);
+    print(size.width);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +65,38 @@ class _Header extends StatelessWidget {
                   height: size.height * .35,
                   child: CustomPaint(
                     painter: Background(color: pokemon.types[0].color),
-                    child: Container(),
+                    child: size.width > 800
+                        ? Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 100),
+                            child: Row(
+                              children: [
+                                if (pokemon.evolution!.hasPrevious)
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        context.read<PokemonDetailBloc>().add(
+                                              PokemonDetailFetch(
+                                                  name: pokemon
+                                                      .evolution!.previousUrl),
+                                            );
+                                      },
+                                      child: const Text('Anterior')),
+                                if (pokemon.evolution!.hasNext) ...[
+                                  const Spacer(),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        context.read<PokemonDetailBloc>().add(
+                                              PokemonDetailFetch(
+                                                  name: pokemon
+                                                      .evolution!.nextUrl),
+                                            );
+                                      },
+                                      child: const Text('Siguiente')),
+                                ]
+                              ],
+                            ),
+                          )
+                        : Container(),
                   ),
                 ),
                 Align(
@@ -79,27 +110,33 @@ class _Header extends StatelessWidget {
                         BlendMode.srcIn),
                   ),
                 ),
-                ImageCarousel(
-                  id: pokemon.id.toString(),
-                  images: pokemon.images,
-                ),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    pokemon.name.toUpperCase(),
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ImageCarousel(
+                      id: pokemon.id.toString(),
+                      images: pokemon.images,
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        pokemon.name.toUpperCase(),
+                        style: GoogleFonts.bebasNeue(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            constraints: BoxConstraints(maxWidth: 1200),
+            constraints: const BoxConstraints(maxWidth: 1200),
             child: Column(
               children: [
                 Row(
@@ -150,36 +187,34 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Icons.next
-                if (pokemon.evolution!.hasPrevious)
-                  ElevatedButton(
-                      onPressed: () {
-                        context.read<PokemonDetailBloc>().add(
-                              PokemonDetailFetch(
-                                  name: pokemon.evolution!.previousUrl),
-                            );
-                      },
-                      child: const Text('Anterior')),
-
-                if (pokemon.evolution!.hasNext) ...[
-                  const Spacer(),
-                  ElevatedButton(
-                      onPressed: () {
-                        context.read<PokemonDetailBloc>().add(
-                              PokemonDetailFetch(
-                                  name: pokemon.evolution!.nextUrl),
-                            );
-                      },
-                      child: const Text('Siguiente')),
-                ]
-              ],
+          if (size.width < 400)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  if (pokemon.evolution!.hasPrevious)
+                    ElevatedButton(
+                        onPressed: () {
+                          context.read<PokemonDetailBloc>().add(
+                                PokemonDetailFetch(
+                                    name: pokemon.evolution!.previousUrl),
+                              );
+                        },
+                        child: const Text('Anterior')),
+                  if (pokemon.evolution!.hasNext) ...[
+                    const Spacer(),
+                    ElevatedButton(
+                        onPressed: () {
+                          context.read<PokemonDetailBloc>().add(
+                                PokemonDetailFetch(
+                                    name: pokemon.evolution!.nextUrl),
+                              );
+                        },
+                        child: const Text('Siguiente')),
+                  ]
+                ],
+              ),
             ),
-          ),
           const SizedBox(height: 20)
         ],
       ),
@@ -431,13 +466,16 @@ class _LanguageSelectorState extends State<TextAndLanguageSelector> {
             children: [dropdown, text],
           );
         } else {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              text,
-              const SizedBox(width: 10),
-              dropdown,
-            ],
+          return Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: text),
+                const SizedBox(width: 10),
+                dropdown,
+              ],
+            ),
           );
         }
       },
@@ -476,67 +514,58 @@ class _ImageCarouselState extends State<ImageCarousel> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      // crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Container(
-            alignment: Alignment.centerRight,
-            child: MaterialButton(
-              onPressed: () => scrollController.previousPage(
-                  duration: const Duration(milliseconds: 1),
-                  curve: Curves.linear),
-              padding: EdgeInsets.zero,
-              minWidth: 30,
-              shape: const CircleBorder(),
-              highlightElevation: 0,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: const Icon(Icons.arrow_back_ios_rounded, size: 16),
-            ),
+        Container(
+          alignment: Alignment.centerRight,
+          child: MaterialButton(
+            onPressed: () => scrollController.previousPage(
+                duration: const Duration(milliseconds: 1),
+                curve: Curves.linear),
+            padding: EdgeInsets.zero,
+            minWidth: 30,
+            shape: const CircleBorder(),
+            highlightElevation: 0,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: const Icon(Icons.arrow_back_ios_rounded, size: 16),
           ),
         ),
-        // SizedBox(width: 5),
-        Expanded(
-          flex: 2,
-          child: Container(
-            // color: Colors.amber,
-            constraints: const BoxConstraints(maxHeight: 220),
-            alignment: Alignment.bottomCenter,
-            child: PageView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.images.length,
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  child: pokemonPicture(
-                    widget.id.toString(),
-                    widget.images[index],
-                    boxFit: BoxFit.contain,
-                    placeholder: const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    ),
+        const SizedBox(width: 20),
+        Container(
+          constraints: const BoxConstraints(maxHeight: 220, maxWidth: 225),
+          alignment: Alignment.bottomCenter,
+          child: PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.images.length,
+            itemBuilder: (context, index) {
+              return SizedBox(
+                child: pokemonPicture(
+                  widget.id.toString(),
+                  widget.images[index],
+                  boxFit: BoxFit.contain,
+                  placeholder: const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
-        // SizedBox(width: 5),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: MaterialButton(
-              onPressed: () => scrollController.nextPage(
-                  duration: const Duration(milliseconds: 1),
-                  curve: Curves.linear),
-              padding: EdgeInsets.zero,
-              minWidth: 30,
-              shape: const CircleBorder(),
-              highlightElevation: 0,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-            ),
+        const SizedBox(width: 20),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: MaterialButton(
+            onPressed: () => scrollController.nextPage(
+                duration: const Duration(milliseconds: 1),
+                curve: Curves.linear),
+            padding: EdgeInsets.zero,
+            minWidth: 30,
+            shape: const CircleBorder(),
+            highlightElevation: 0,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
           ),
         ),
       ],
@@ -553,8 +582,6 @@ class Background extends CustomPainter {
     var gradient = LinearGradient(
       transform: const GradientRotation(7),
       colors: [color, color.withOpacity(.05)],
-      // begin: Alignment.topLeft,
-      // end: Alignment.bottomRight,
     );
 
     var paint = Paint()
@@ -564,11 +591,8 @@ class Background extends CustomPainter {
           gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     double heightControl =
-        size.width < 1000 ? size.height * .6 : size.height * .65;
-    double height = size.width < 1000 ? size.height * .8 : size.height;
-
-    //     double widthControl =
-    // size.width < 600 ? size.height * .3 : size.height * .65;
+        size.width < 1000 ? size.height * .6 : size.height * .6;
+    double height = size.width < 1000 ? size.height * .8 : size.height * .8;
 
     var path = Path()
       ..lineTo(0, heightControl)

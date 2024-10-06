@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 if (constraints.maxWidth > 400) ...[
                   Image.asset(
-                    'pokedex.png',
+                    'assets/pokedex.png',
                     height: 45,
                   ),
                   const SizedBox(width: 10),
