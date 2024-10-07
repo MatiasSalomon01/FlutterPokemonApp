@@ -187,7 +187,7 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-          if (size.width < 400)
+          if (size.width < 800)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
