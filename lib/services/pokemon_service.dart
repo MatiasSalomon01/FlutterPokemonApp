@@ -6,7 +6,7 @@ class PokemonService {
   final String baseUrl = "https://pokeapi.co/api/v2/pokemon";
 
   Future<(String?, List<PokemonPreview>)> getList(String? next) async {
-    print('se peticiona listado');
+    // print('se peticiona listado');
     var uri = next ?? '$baseUrl?limit=1302';
     var response = await client.get(Uri.parse(uri));
     var pokemonList = PokemonList.fromJson(response.toMap());
@@ -15,7 +15,7 @@ class PokemonService {
   }
 
   Future<Pokemon> getDetails(String name) async {
-    print('se peticiona detalle');
+    // print('se peticiona detalle');
     var response = await client.get(Uri.parse('$baseUrl/$name'));
 
     var map = response.toMap();
@@ -39,7 +39,7 @@ class PokemonService {
 
   Future<(Evolution, List<String>)> getEvolution(
       String name, String speciesUrl) async {
-    print('se peticiona evoluciones');
+    // print('se peticiona evoluciones');
 
     List<String> evolutions = [];
     List<String> descriptions = [];
