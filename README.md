@@ -1,3 +1,3 @@
-# flutter_pokemon_app
+# FLUTTER
 
-A new Flutter project.
+Flutter App using BLoC and the PokeAPI v2
